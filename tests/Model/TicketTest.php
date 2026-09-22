@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Model;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Ticket;
+use EResponsable\SyliusMondialRelayPlugin\Model\Ticket;
 
 class TicketTest extends TestCase
 {

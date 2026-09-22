@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\DependencyInjection;
+namespace EResponsable\SyliusMondialRelayPlugin\DependencyInjection;
 
-use Sherlockode\SyliusMondialRelayPlugin\Manager\MapProviderManager;
+use EResponsable\SyliusMondialRelayPlugin\Manager\MapProviderManager;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -16,7 +16,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('sherlockode_sylius_mondial_relay');
+        $treeBuilder = new TreeBuilder('eResponsable_sylius_mondial_relay');
 
         $treeBuilder
             ->getRootNode()

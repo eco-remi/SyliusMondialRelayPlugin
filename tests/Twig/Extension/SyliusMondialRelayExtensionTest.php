@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Twig\Extension;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Twig\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Twig\Extension\SyliusMondialRelayExtension;
-use Sherlockode\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
+use EResponsable\SyliusMondialRelayPlugin\Twig\Extension\SyliusMondialRelayExtension;
+use EResponsable\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 

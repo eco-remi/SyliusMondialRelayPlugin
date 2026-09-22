@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\PlaceFinder;
+namespace EResponsable\SyliusMondialRelayPlugin\PlaceFinder;
 
 class PlaceFinderRegistry
 {

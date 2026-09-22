@@ -1,5 +1,5 @@
 {
-    "name": "sherlockode/sylius-mondial-relay-plugin",
+    "name": "eresponsable/sylius-mondial-relay-plugin",
     "type": "sylius-plugin",
     "description": "Sylius plugin for Mondial Relay.",
     "keywords": [
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Sherlockode\\SyliusMondialRelayPlugin\\": "src/"
+            "EResponsable\\SyliusMondialRelayPlugin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sherlockode\\SyliusMondialRelayPlugin\\Tests\\": "tests/"
+            "EResponsable\\SyliusMondialRelayPlugin\\Tests\\": "tests/"
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Manager;
+namespace EResponsable\SyliusMondialRelayPlugin\Manager;
 
 class MapProviderManager
 {

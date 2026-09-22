@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
+use EResponsable\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
 
 class OpeningTimeSlotFactory
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\MondialRelay\Api\Request;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\MondialRelay\Api\Request;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Request\GenericRequest;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Request\GenericRequest;
 
 class GenericRequestTest extends TestCase
 {

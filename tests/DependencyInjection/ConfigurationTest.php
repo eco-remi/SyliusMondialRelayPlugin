@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\DependencyInjection;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\DependencyInjection\Configuration;
+use EResponsable\SyliusMondialRelayPlugin\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase

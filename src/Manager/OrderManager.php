@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Manager;
+namespace EResponsable\SyliusMondialRelayPlugin\Manager;
 
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Model\OrderItemInterface;

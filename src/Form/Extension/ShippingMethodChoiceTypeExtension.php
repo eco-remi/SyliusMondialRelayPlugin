@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Form\Extension;
+namespace EResponsable\SyliusMondialRelayPlugin\Form\Extension;
 
-use Sherlockode\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
+use EResponsable\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;

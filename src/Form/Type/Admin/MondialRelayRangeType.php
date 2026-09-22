@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Form\Type\Admin;
+namespace EResponsable\SyliusMondialRelayPlugin\Form\Type\Admin;
 
 use Sylius\Bundle\MoneyBundle\Form\Type\MoneyType;
 use Symfony\Component\Form\AbstractType;

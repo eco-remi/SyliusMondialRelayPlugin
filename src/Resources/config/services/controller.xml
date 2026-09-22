@@ -2,27 +2,27 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="Sherlockode\SyliusMondialRelayPlugin\Controller\Admin\ShipmentController">
+        <service id="EResponsable\SyliusMondialRelayPlugin\Controller\Admin\ShipmentController">
             <argument type="service" id="sylius.repository.shipment" />
             <argument type="service" id="router" />
             <argument type="service" id="request_stack" />
             <argument type="service" id="translator" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="twig" />
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.bridge" />
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.manager.order" />
-            <argument>%sherlockode_sylius_mondial_relay.enable_ticket_printing%</argument>
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.bridge" />
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.manager.order" />
+            <argument>%eResponsable_sylius_mondial_relay.enable_ticket_printing%</argument>
             <tag name="controller.service_arguments" />
         </service>
-        <service id="Sherlockode\SyliusMondialRelayPlugin\Controller\Shop\CheckoutController">
+        <service id="EResponsable\SyliusMondialRelayPlugin\Controller\Shop\CheckoutController">
             <argument type="service" id="router" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="sylius.context.cart.composite" />
             <argument type="service" id="twig" />
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.bridge" />
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.place_finder.registry" />
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.serializer.point" />
-            <argument>%sherlockode_sylius_mondial_relay.map_provider%</argument>
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.bridge" />
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.place_finder.registry" />
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.serializer.point" />
+            <argument>%eResponsable_sylius_mondial_relay.map_provider%</argument>
             <tag name="controller.service_arguments" />
         </service>
     </services>

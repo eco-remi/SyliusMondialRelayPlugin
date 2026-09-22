@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Form\Extension;
+namespace EResponsable\SyliusMondialRelayPlugin\Form\Extension;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sherlockode\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
+use EResponsable\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType as BaseShipmentType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
