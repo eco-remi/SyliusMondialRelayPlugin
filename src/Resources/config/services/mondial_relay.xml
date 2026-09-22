@@ -2,17 +2,17 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.bridge" class="Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay">
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.client" />
+        <service id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.bridge" class="EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay">
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.client" />
         </service>
-        <service id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.client" class="Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Client">
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.factory.ticket" />
-            <argument>%sherlockode_sylius_mondial_relay.wsdl%</argument>
-            <argument>%sherlockode_sylius_mondial_relay.merchant_id%</argument>
-            <argument>%sherlockode_sylius_mondial_relay.private_key%</argument>
+        <service id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.client" class="EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Client">
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.factory.ticket" />
+            <argument>%eResponsable_sylius_mondial_relay.wsdl%</argument>
+            <argument>%eResponsable_sylius_mondial_relay.merchant_id%</argument>
+            <argument>%eResponsable_sylius_mondial_relay.private_key%</argument>
         </service>
-        <service id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.factory.ticket" class="Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\TicketFactory">
-            <argument>%sherlockode_sylius_mondial_relay.base_url%</argument>
+        <service id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.factory.ticket" class="EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\TicketFactory">
+            <argument>%eResponsable_sylius_mondial_relay.base_url%</argument>
         </service>
     </services>
 </container>

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\Ticket;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\PointFactory;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\TicketFactory;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Request\GenericRequest;
+use EResponsable\SyliusMondialRelayPlugin\Model\Ticket;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\PointFactory;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\TicketFactory;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Request\GenericRequest;
 
 /**
  * Class Client

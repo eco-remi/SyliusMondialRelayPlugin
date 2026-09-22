@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Request;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Request;
 
 class GenericRequest implements RequestInterface
 {

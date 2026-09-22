@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api;
 
 class ErrorCode
 {

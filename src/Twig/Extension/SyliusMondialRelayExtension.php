@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Twig\Extension;
+namespace EResponsable\SyliusMondialRelayPlugin\Twig\Extension;
 
-use Sherlockode\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
+use EResponsable\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;

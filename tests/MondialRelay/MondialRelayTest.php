@@ -1,13 +1,13 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\MondialRelay;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\MondialRelay;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Ticket;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Client;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Model\Ticket;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Client;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
 use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\Core\Model\AddressInterface as CoreAddressInterface;
 use Sylius\Component\Core\Model\ChannelInterface;

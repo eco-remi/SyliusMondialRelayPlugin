@@ -1,12 +1,12 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Serializer;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Serializer;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
-use Sherlockode\SyliusMondialRelayPlugin\Serializer\PointSerializer;
+use EResponsable\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Serializer\PointSerializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PointSerializerTest extends TestCase

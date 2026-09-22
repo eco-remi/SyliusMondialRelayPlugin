@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\PlaceFinder;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\PlaceFinder;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Manager\MapProviderManager;
-use Sherlockode\SyliusMondialRelayPlugin\PlaceFinder\NominatimPlaceFinder;
+use EResponsable\SyliusMondialRelayPlugin\Manager\MapProviderManager;
+use EResponsable\SyliusMondialRelayPlugin\PlaceFinder\NominatimPlaceFinder;
 
 class NominatimPlaceFinderTest extends TestCase
 {

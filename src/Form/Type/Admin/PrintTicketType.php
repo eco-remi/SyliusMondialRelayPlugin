@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Form\Type\Admin;
+namespace EResponsable\SyliusMondialRelayPlugin\Form\Type\Admin;
 
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;

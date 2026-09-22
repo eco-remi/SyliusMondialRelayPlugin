@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Model;
+namespace EResponsable\SyliusMondialRelayPlugin\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 

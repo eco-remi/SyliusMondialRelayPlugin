@@ -1,12 +1,12 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Controller\Admin;
+namespace EResponsable\SyliusMondialRelayPlugin\Controller\Admin;
 
-use Sherlockode\SyliusMondialRelayPlugin\Form\Type\Admin\PrintTicketType;
-use Sherlockode\SyliusMondialRelayPlugin\Manager\OrderManager;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\ErrorCode;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\Form\Type\Admin\PrintTicketType;
+use EResponsable\SyliusMondialRelayPlugin\Manager\OrderManager;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\ErrorCode;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Component\Form\FormError;
@@ -133,7 +133,7 @@ class ShipmentController
                 'weight' => $this->orderManager->getOrderTotalWeight($shipment->getOrder()),
             ],
             [
-                'action' => $this->urlGenerator->generate('sherlockode_sylius_mondial_relay_admin_print_ticket', [
+                'action' => $this->urlGenerator->generate('eResponsable_sylius_mondial_relay_admin_print_ticket', [
                     'id' => $id,
                 ]),
                 'method' => 'POST',
@@ -164,7 +164,7 @@ class ShipmentController
         return new JsonResponse([
             'success' => !$form->isSubmitted() || $form->isValid(),
             'html' => $this->twig->render(
-                '@SherlockodeSyliusMondialRelayPlugin/Admin/Order/Show/Shipment/_print_ticket_modal.html.twig',
+                '@EResponsableSyliusMondialRelayPlugin/Admin/Order/Show/Shipment/_print_ticket_modal.html.twig',
                 ['form' => $form->createView()]
             )
         ]);

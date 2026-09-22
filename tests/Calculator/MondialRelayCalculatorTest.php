@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Calculator;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Calculator;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
+use EResponsable\SyliusMondialRelayPlugin\Calculator\MondialRelayCalculator;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
 
 class MondialRelayCalculatorTest extends TestCase

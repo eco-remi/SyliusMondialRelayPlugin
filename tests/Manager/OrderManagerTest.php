@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Manager;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Manager;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Manager\OrderManager;
+use EResponsable\SyliusMondialRelayPlugin\Manager\OrderManager;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;

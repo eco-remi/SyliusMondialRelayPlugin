@@ -2,14 +2,14 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="Sherlockode\SyliusMondialRelayPlugin\Twig\Extension\SyliusMondialRelayExtension">
+        <service id="EResponsable\SyliusMondialRelayPlugin\Twig\Extension\SyliusMondialRelayExtension">
             <tag name="twig.extension" />
         </service>
-        <service id="Sherlockode\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime">
-            <argument type="service" id="sherlockode.sylius_mondial_relay_plugin.mondial_relay.bridge"/>
-            <argument>%sherlockode_sylius_mondial_relay.enable_ticket_printing%</argument>
-            <argument>%sherlockode_sylius_mondial_relay.map_provider%</argument>
-            <argument>%sherlockode_sylius_mondial_relay.google_api_key%</argument>
+        <service id="EResponsable\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime">
+            <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.bridge"/>
+            <argument>%eResponsable_sylius_mondial_relay.enable_ticket_printing%</argument>
+            <argument>%eResponsable_sylius_mondial_relay.map_provider%</argument>
+            <argument>%eResponsable_sylius_mondial_relay.google_api_key%</argument>
             <tag name="twig.runtime" />
         </service>
     </services>

@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Model;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Model\OpeningTimeSlot;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
 
 class PointTest extends TestCase
 {

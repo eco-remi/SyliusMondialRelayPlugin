@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
 
 class PointFactory
 {

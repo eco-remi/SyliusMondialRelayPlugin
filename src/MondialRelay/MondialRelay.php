@@ -1,11 +1,11 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\MondialRelay;
+namespace EResponsable\SyliusMondialRelayPlugin\MondialRelay;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Ticket;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Client;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Model\Ticket;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Client;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
 use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Order\Model\OrderInterface;

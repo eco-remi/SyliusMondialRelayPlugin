@@ -1,11 +1,11 @@
-# Sherlockode SyliusMondialRelayPlugin
+# eresponsable SyliusMondialRelayPlugin
 
 ----
 
-[ ![](https://img.shields.io/packagist/l/sherlockode/sylius-mondial-relay-plugin) ](https://packagist.org/packages/sherlockode/sylius-mondial-relay-plugin "License")
-[ ![](https://img.shields.io/packagist/v/sherlockode/sylius-mondial-relay-plugin) ](https://packagist.org/packages/sherlockode/sylius-mondial-relay-plugin "Version")
-[ ![](https://poser.pugx.org/sherlockode/sylius-mondial-relay-plugin/downloads)](https://packagist.org/packages/sherlockode/sylius-mondial-relay-plugin "Total Downloads")
-[ ![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://www.sherlockode.fr/contactez-nous/?utm_source=github&utm_medium=referral&utm_campaign=plugins_mondial_relay)
+[ ![](https://img.shields.io/packagist/l/eresponsable/sylius-mondial-relay-plugin) ](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "License")
+[ ![](https://img.shields.io/packagist/v/eresponsable/sylius-mondial-relay-plugin) ](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "Version")
+[ ![](https://poser.pugx.org/eresponsable/sylius-mondial-relay-plugin/downloads)](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "Total Downloads")
+[ ![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://www.eresponsable.fr/contactez-nous/?utm_source=github&utm_medium=referral&utm_campaign=plugins_mondial_relay)
 
 
 ## Table of Content
@@ -34,15 +34,15 @@ This plugin enables Mondial Relay shipping method on your Sylius website.
 Install the plugin with composer:
 
 ```bash
-$ composer require sherlockode/sylius-mondial-relay-plugin
+composer require eresponsable/sylius-mondial-relay-plugin
 ```
 
 Complete the configuration:
 
 ```yaml
-# config/packages/sherlockode_sylius_mondial_relay.yaml
+# config/packages/eresponsable_sylius_mondial_relay.yaml
 
-sherlockode_sylius_mondial_relay:
+eresponsable_sylius_mondial_relay:
     wsdl: The mondial relay WSDL
     merchant_id: Your merchant ID
     private_key: Your private key
@@ -53,8 +53,8 @@ Import routing:
 ```yaml
 # config/routes.yaml
 
-sherlockode_sylius_mondial_relay_plugin:
-    resource: "@SherlockodeSyliusMondialRelayPlugin/Resources/config/routing.xml"
+eresponsable_sylius_mondial_relay_plugin:
+    resource: "@eresponsableSyliusMondialRelayPlugin/Resources/config/routing.xml"
 ```
 
 In your Shipment entity, import the `PickupPointTrait`:
@@ -67,7 +67,7 @@ In your Shipment entity, import the `PickupPointTrait`:
 namespace App\Entity\Shipping;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sherlockode\SyliusMondialRelayPlugin\Model\PickupPointTrait;
+use eresponsable\SyliusMondialRelayPlugin\Model\PickupPointTrait;
 use Sylius\Component\Core\Model\Shipment as BaseShipment;
 
 /**
@@ -87,12 +87,12 @@ Update your webpack configuration to add entries both in shop config and admin c
 // Shop config
 Encore
   // ...
-  .addEntry('sherlockode-mondial-relay', './vendor/sherlockode/sylius-mondial-relay-plugin/src/Resources/public/js/entry.js')
+  .addEntry('eresponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/entry.js')
 
 // Admin config
 Encore
   // ...
-  .addEntry('sherlockode-mondial-relay', './vendor/sherlockode/sylius-mondial-relay-plugin/src/Resources/public/js/admin.js')
+  .addEntry('eresponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/admin.js')
 ```
 
 ----
@@ -113,9 +113,9 @@ You can do it in the [Google Cloud Console](https://console.cloud.google.com).
 Then, update the plugin configuration:
 
 ```yaml
-# config/packages/sherlockode_sylius_mondial_relay.yaml
+# config/packages/eresponsable_sylius_mondial_relay.yaml
 
-sherlockode_sylius_mondial_relay:
+eresponsable_sylius_mondial_relay:
     # ...
     map_provider: google
     google_api_key: '%env(GOOGLE_API_KEY)%'
@@ -128,9 +128,9 @@ Additionally, you may want to enable Google Place API to show places suggestions
 This plugin also supports Open Street Map. To enable it, you just have to update the `map_provider` setting in your plugin configuration:
 
 ```yaml
-# config/packages/sherlockode_sylius_mondial_relay.yaml
+# config/packages/eresponsable_sylius_mondial_relay.yaml
 
-sherlockode_sylius_mondial_relay:
+eresponsable_sylius_mondial_relay:
     # ...
     map_provider: open_street_map
 ```
@@ -145,7 +145,7 @@ Go on the order details page and use the "Print ticket" button.
 This feature can be disabled from the bundle configuration:
 
 ```yaml
-sherlockode_sylius_mondial_relay:
+eresponsable_sylius_mondial_relay:
     # ...
     enable_ticket_printing: false
 ```
@@ -157,16 +157,16 @@ sherlockode_sylius_mondial_relay:
 ---
 
 We created a demo app with some useful use-cases of plugins!
-Visit [sylius-demo.sherlockode.fr](https://sylius-demo.sherlockode.fr/) to take a look at it. The admin can be accessed under
-[sylius-demo.sherlockode.fr/admin/login](https://sylius-demo.sherlockode.fr/admin/login) link.
+Visit [sylius-demo.eresponsable.fr](https://sylius-demo.eresponsable.fr/) to take a look at it. The admin can be accessed under
+[sylius-demo.eresponsable.fr/admin/login](https://sylius-demo.eresponsable.fr/admin/login) link.
 Plugins that we have used in the demo:
 
 | Plugin name                  | GitHub                                                     | Sylius' Store |
 |------------------------------|------------------------------------------------------------|---------------|
-| Advance Content Bundle (ACB) | https://github.com/sherlockode/SyliusAdvancedContentPlugin | -             |
-| Mondial Relay                | https://github.com/sherlockode/SyliusMondialRelayPlugin    | -             |
-| Checkout Plugin              | https://github.com/sherlockode/SyliusCheckoutPlugin        | -             |
-| FAQ                          | https://github.com/sherlockode/SyliusFAQPlugin             | -             |
+| Advance Content Bundle (ACB) | https://github.com/eresponsable/SyliusAdvancedContentPlugin | -             |
+| Mondial Relay                | https://github.com/eresponsable/SyliusMondialRelayPlugin    | -             |
+| Checkout Plugin              | https://github.com/eresponsable/SyliusCheckoutPlugin        | -             |
+| FAQ                          | https://github.com/eresponsable/SyliusFAQPlugin             | -             |
 
 ## Additional resources for developers
 
@@ -187,4 +187,4 @@ This plugin's source code is completely free and released under the terms of the
 ## Contact
 
 ---
-If you want to contact us, the best way is to fill the form on [our website](https://www.sherlockode.fr/contactez-nous/?utm_source=github&utm_medium=referral&utm_campaign=plugins_mondial_relay) or send us an e-mail to contact@sherlockode.fr with your question(s). We guarantee that we answer as soon as we can!
+If you want to contact us, the best way is to fill the form on [our website](https://www.eresponsable.fr/contactez-nous/?utm_source=github&utm_medium=referral&utm_campaign=plugins_mondial_relay) or send us an e-mail to contact@eresponsable.fr with your question(s). We guarantee that we answer as soon as we can!

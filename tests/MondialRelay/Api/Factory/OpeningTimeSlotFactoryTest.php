@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\MondialRelay\Api\Factory;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\MondialRelay\Api\Factory;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\OpeningTimeSlotFactory;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\OpeningTimeSlotFactory;
 
 class OpeningTimeSlotFactoryTest extends TestCase
 {

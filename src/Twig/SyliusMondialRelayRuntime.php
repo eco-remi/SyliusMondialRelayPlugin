@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Twig;
+namespace EResponsable\SyliusMondialRelayPlugin\Twig;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
 use Sylius\Component\Core\Model\Shipment;
 use Twig\Extension\RuntimeExtensionInterface;
 

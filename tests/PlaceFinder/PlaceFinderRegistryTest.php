@@ -1,10 +1,10 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\PlaceFinder;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\PlaceFinder;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderInterface;
-use Sherlockode\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderRegistry;
+use EResponsable\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderInterface;
+use EResponsable\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderRegistry;
 
 class PlaceFinderRegistryTest extends TestCase
 {

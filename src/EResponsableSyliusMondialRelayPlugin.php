@@ -1,16 +1,16 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin;
+namespace EResponsable\SyliusMondialRelayPlugin;
 
-use Sherlockode\SyliusMondialRelayPlugin\DependencyInjection\Compiler\SyliusUiPass;
+use EResponsable\SyliusMondialRelayPlugin\DependencyInjection\Compiler\SyliusUiPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class SherlockodeSyliusMondialRelayPlugin
+ * Class EResponsableSyliusMondialRelayPlugin
  */
-class SherlockodeSyliusMondialRelayPlugin extends Bundle
+class EResponsableSyliusMondialRelayPlugin extends Bundle
 {
     use SyliusPluginTrait;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\PlaceFinder;
+namespace EResponsable\SyliusMondialRelayPlugin\PlaceFinder;
 
-use Sherlockode\SyliusMondialRelayPlugin\Manager\MapProviderManager;
+use EResponsable\SyliusMondialRelayPlugin\Manager\MapProviderManager;
 
 class NominatimPlaceFinder implements PlaceFinderInterface
 {

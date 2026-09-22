@@ -1,13 +1,13 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Twig;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Twig;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
-use Sherlockode\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiException;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\Twig\SyliusMondialRelayRuntime;
 use Sylius\Component\Core\Model\Shipment;
 
 class SyliusMondialRelayRuntimeTest extends TestCase

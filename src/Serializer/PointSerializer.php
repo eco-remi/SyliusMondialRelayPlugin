@@ -1,8 +1,8 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Serializer;
+namespace EResponsable\SyliusMondialRelayPlugin\Serializer;
 
-use Sherlockode\SyliusMondialRelayPlugin\Model\Point;
+use EResponsable\SyliusMondialRelayPlugin\Model\Point;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PointSerializer

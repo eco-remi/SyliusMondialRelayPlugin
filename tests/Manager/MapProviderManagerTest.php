@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\Manager;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\Manager;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\Manager\MapProviderManager;
+use EResponsable\SyliusMondialRelayPlugin\Manager\MapProviderManager;
 
 class MapProviderManagerTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\DependencyInjection\Compiler;
+namespace EResponsable\SyliusMondialRelayPlugin\DependencyInjection\Compiler;
 
 use Laminas\Stdlib\SplPriorityQueue;
 use Sylius\Bundle\UiBundle\Registry\TemplateBlock;

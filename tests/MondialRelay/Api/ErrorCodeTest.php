@@ -1,9 +1,9 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Tests\MondialRelay\Api;
+namespace EResponsable\SyliusMondialRelayPlugin\Tests\MondialRelay\Api;
 
 use PHPUnit\Framework\TestCase;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\Api\ErrorCode;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\ErrorCode;
 
 class ErrorCodeTest extends TestCase
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Sherlockode\SyliusMondialRelayPlugin\Controller\Shop;
+namespace EResponsable\SyliusMondialRelayPlugin\Controller\Shop;
 
-use Sherlockode\SyliusMondialRelayPlugin\Form\Type\Shop\SearchPickupPointType;
-use Sherlockode\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
-use Sherlockode\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderRegistry;
-use Sherlockode\SyliusMondialRelayPlugin\Serializer\PointSerializer;
+use EResponsable\SyliusMondialRelayPlugin\Form\Type\Shop\SearchPickupPointType;
+use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
+use EResponsable\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderRegistry;
+use EResponsable\SyliusMondialRelayPlugin\Serializer\PointSerializer;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -138,7 +138,7 @@ class CheckoutController
         }
 
         return new JsonResponse([
-            'form' => $this->twig->render('@SherlockodeSyliusMondialRelayPlugin/Checkout/SelectShipping/_search_pickup_point.html.twig', [
+            'form' => $this->twig->render('@EResponsableSyliusMondialRelayPlugin/Checkout/SelectShipping/_search_pickup_point.html.twig', [
                 'form' => $form->createView(),
                 'zipCode' => $zipCode,
             ]),
@@ -214,7 +214,7 @@ class CheckoutController
         }
 
         return new Response($this->twig->render(
-            '@SherlockodeSyliusMondialRelayPlugin/Checkout/SelectShipping/_current_pickup_point.html.twig',
+            '@EResponsableSyliusMondialRelayPlugin/Checkout/SelectShipping/_current_pickup_point.html.twig',
             ['pickupPoint' => $pickupPoint]
         ));
     }
@@ -244,7 +244,7 @@ class CheckoutController
     private function getPickupPointSearchForm(array $data = []): FormInterface
     {
         return $this->formFactory->create(SearchPickupPointType::class, $data, [
-            'action' => $this->urlGenerator->generate('sherlockode_sylius_mondial_relay_search_pickup_points'),
+            'action' => $this->urlGenerator->generate('eResponsable_sylius_mondial_relay_search_pickup_points'),
             'method' => 'GET',
         ]);
     }
