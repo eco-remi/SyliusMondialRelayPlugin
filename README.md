@@ -87,7 +87,7 @@ Update your webpack configuration to add entries both in shop config and admin c
 // Shop config
 Encore
   // ...
-  .addEntry('eresponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/entry.js')
+  .addEntry('eResponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/entry.js')
 ```
 
 ----
