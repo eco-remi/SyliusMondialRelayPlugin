@@ -1,5 +1,5 @@
 {% if 'sylius_shop_checkout_select_shipping' == app.request.get('_route') %}
-    {{ encore_entry_script_tags('eResponsable-mondial-relay', null, 'shop') }}
+    {{ encore_entry_script_tags('e-responsable-mondial-relay', null, 'shop') }}
     {% set mapProvider = get_map_provider() %}
     {% if mapProvider is constant('EResponsable\\SyliusMondialRelayPlugin\\Manager\\MapProviderManager::MAP_PROVIDER_GOOGLE') %}
         <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key() }}&callback=Function.prototype"></script>

@@ -23,6 +23,22 @@ export default class OsmAdapter
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.map);
+
+        this.resize();
+    }
+
+    resize() {
+        if (!this.map) {
+            return;
+        }
+
+        setTimeout(function () {
+            this.map.invalidateSize();
+        }.bind(this), 0);
+
+        setTimeout(function () {
+            this.map.invalidateSize();
+        }.bind(this), 200);
     }
 
     updateMarkers(markers) {
