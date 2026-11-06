@@ -5,7 +5,7 @@
 [ ![](https://img.shields.io/packagist/l/eresponsable/sylius-mondial-relay-plugin) ](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "License")
 [ ![](https://img.shields.io/packagist/v/eresponsable/sylius-mondial-relay-plugin) ](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "Version")
 [ ![](https://poser.pugx.org/eresponsable/sylius-mondial-relay-plugin/downloads)](https://packagist.org/packages/eresponsable/sylius-mondial-relay-plugin "Total Downloads")
-[ ![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://www.eresponsable.fr/contactez-nous/?utm_source=github&utm_medium=referral&utm_campaign=plugins_mondial_relay)
+[ ![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://e-responsable.com/contact?source=github_plugins_mondial_relay)
 
 
 ## Table of Content
@@ -43,9 +43,9 @@ Complete the configuration:
 # config/packages/eresponsable_sylius_mondial_relay.yaml
 
 e_responsable_sylius_mondial_relay:
-    wsdl: The mondial relay WSDL
-    merchant_id: Your merchant ID
-    private_key: Your private key
+    wsdl: https://api.mondialrelay.com/Web_Services.asmx
+    merchant_id: "%env(MONDIAL_RELAIS_MERDANT_ID)%"
+    private_key: "%env(MONDIAL_RELAIS_PRIVATE_KEY)%"
 ```
 
 Import routing:
@@ -88,11 +88,6 @@ Update your webpack configuration to add entries both in shop config and admin c
 Encore
   // ...
   .addEntry('eresponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/entry.js')
-
-// Admin config
-Encore
-  // ...
-  .addEntry('eresponsable-mondial-relay', './vendor/eresponsable/sylius-mondial-relay-plugin/src/Resources/public/js/admin.js')
 ```
 
 ----
@@ -169,4 +164,4 @@ This plugin's source code is completely free and released under the terms of the
 ## Contact
 
 ---
-If you want to contact us, the best way is to fill the form on [our website](https://e-responsable.com/contact?src=pluginmr) or send us an e-mail to je-suis@eresponsable.fr with your question(s). We guarantee that we answer as soon as we can!
+If you want to contact us, the best way is to fill the form on [our website](https://e-responsable.com/contact?src=pluginmr) or send us an e-mail to je-suis@e-responsable.com with your question(s). We guarantee that we answer as soon as we can!
