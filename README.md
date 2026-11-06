@@ -54,7 +54,7 @@ Import routing:
 # config/routes.yaml
 
 e_responsable_sylius_mondial_relay_plugin:
-    resource: "@eresponsableSyliusMondialRelayPlugin/Resources/config/routing.xml"
+    resource: "@EResponsableSyliusMondialRelayPlugin/Resources/config/routing.xml"
 ```
 
 In your Shipment entity, import the `PickupPointTrait`:
