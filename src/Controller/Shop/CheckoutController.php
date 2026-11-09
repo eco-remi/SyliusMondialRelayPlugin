@@ -6,6 +6,7 @@ use EResponsable\SyliusMondialRelayPlugin\Form\Type\Shop\SearchPickupPointType;
 use EResponsable\SyliusMondialRelayPlugin\MondialRelay\MondialRelay;
 use EResponsable\SyliusMondialRelayPlugin\PlaceFinder\PlaceFinderRegistry;
 use EResponsable\SyliusMondialRelayPlugin\Serializer\PointSerializer;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -24,76 +25,17 @@ use Twig\Error\SyntaxError;
  */
 class CheckoutController
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var CartContextInterface
-     */
-    private $cartContext;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var MondialRelay
-     */
-    private $apiClient;
-
-    /**
-     * @var PlaceFinderRegistry
-     */
-    private $placeFinderRegistry;
-
-    /**
-     * @var PointSerializer
-     */
-    private $pointSerializer;
-
-    /**
-     * @var string
-     */
-    private $mapProvider;
-
-    /**
-     * CheckoutController constructor.
-     *
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param FormFactoryInterface  $formFactory
-     * @param CartContextInterface  $cartContext
-     * @param Environment           $twig
-     * @param MondialRelay          $apiClient
-     * @param PlaceFinderRegistry   $placeFinderRegistry
-     * @param PointSerializer       $pointSerializer
-     * @param string                $mapProvider
-     */
     public function __construct(
-        UrlGeneratorInterface $urlGenerator,
-        FormFactoryInterface $formFactory,
-        CartContextInterface $cartContext,
-        Environment $twig,
-        MondialRelay $apiClient,
-        PlaceFinderRegistry $placeFinderRegistry,
-        PointSerializer $pointSerializer,
-        ?string $mapProvider
+        private UrlGeneratorInterface $urlGenerator,
+        private FormFactoryInterface $formFactory,
+        private CartContextInterface $cartContext,
+        private Environment $twig,
+        private MondialRelay $apiClient,
+        private PlaceFinderRegistry $placeFinderRegistry,
+        private PointSerializer $pointSerializer,
+        private LoggerInterface $logger,
+        private ?string $mapProvider
     ) {
-        $this->urlGenerator = $urlGenerator;
-        $this->formFactory = $formFactory;
-        $this->cartContext = $cartContext;
-        $this->twig = $twig;
-        $this->apiClient = $apiClient;
-        $this->placeFinderRegistry = $placeFinderRegistry;
-        $this->pointSerializer = $pointSerializer;
-        $this->mapProvider = $mapProvider;
     }
 
     /**
@@ -120,6 +62,7 @@ class CheckoutController
                     $shippingAddress->getCountryCode(),
                 );
             } catch (\Exception $e) {
+                $this->logger->error('Mondial Relay API error: ' . $e->getMessage());
             }
         }
 
@@ -134,6 +77,7 @@ class CheckoutController
         try {
             $points = $this->apiClient->findPickupPointsByZipCode($zipCode, $actions);
         } catch (\Exception $e) {
+            $this->logger->error('Mondial Relay API error: ' . $e->getMessage());
             $points = [];
         }
 
@@ -182,6 +126,7 @@ class CheckoutController
                     $points = $this->apiClient->findPickupPointsAround($cart->getShippingAddress());
                 }
             } catch (\Exception $e) {
+                $this->logger->error('Mondial Relay API error: ' . $e->getMessage());
             }
         }
 
@@ -210,6 +155,7 @@ class CheckoutController
                     $shippingAddress->getCountryCode()
                 );
             } catch (\Exception $e) {
+                $this->logger->error('Mondial Relay API error: ' . $e->getMessage());
             }
         }
 

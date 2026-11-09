@@ -7,36 +7,13 @@ use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Exception\ApiExceptio
 use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\PointFactory;
 use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Factory\TicketFactory;
 use EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Request\GenericRequest;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Client
  */
 class Client
 {
-    /**
-     * @var TicketFactory
-     */
-    private $ticketFactory;
-
-    /**
-     * @var string
-     */
-    private $wsdl;
-
-    /**
-     * @var string
-     */
-    private $merchantId;
-
-    /**
-     * @var string
-     */
-    private $privateKey;
-
-    /**
-     * @var \SoapClient
-     */
-    private $soap;
 
     /**
      * Client constructor.
@@ -47,16 +24,12 @@ class Client
      * @param string        $privateKey
      */
     public function __construct(
-        TicketFactory $ticketFactory,
-        string $wsdl,
-        string $merchantId,
-        string $privateKey
-    ) {
-        $this->ticketFactory = $ticketFactory;
-        $this->wsdl = $wsdl;
-        $this->merchantId = $merchantId;
-        $this->privateKey = $privateKey;
-    }
+        private TicketFactory $ticketFactory,
+        private LoggerInterface $logger,
+        private string $wsdl,
+        private string $merchantId,
+        private string $privateKey
+    ) { }
 
     /**
      * @param array $payload
@@ -73,6 +46,7 @@ class Client
         try {
             $response = $this->getClient()->WSI4_PointRelais_Recherche($request->getPayload());
         } catch (\SoapFault $soapFault) {
+            $this->logger->error('SOAP Fault: ' . $soapFault->getMessage());
             throw new ApiException();
         }
 

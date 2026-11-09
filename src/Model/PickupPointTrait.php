@@ -11,11 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait PickupPointTrait
 {
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="pickup_point_id", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'pickup_point_id', type: 'string', length: 255, nullable: true)]
     private ?string $pickupPointId = null;
 
     /**
