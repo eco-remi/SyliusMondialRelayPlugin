@@ -56,5 +56,16 @@ class EResponsableSyliusMondialRelayExtension extends Extension implements Prepe
                 }
             }
         }
+
+        $doctrineConfig = $container->getExtensionConfig('doctrine_migrations');
+
+        $container->prependExtensionConfig('doctrine_migrations', [
+            'migrations_paths' => array_merge(
+                array_pop($doctrineConfig)['migrations_paths'] ?? [],
+                [
+                    'EResponsable\SyliusMondialRelayPlugin\Migrations' => '@EResponsableSyliusMondialRelayPlugin/Migrations',
+                ]
+            ),
+        ]);
     }
 }

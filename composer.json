@@ -2,7 +2,7 @@
     "name": "eresponsable/sylius-mondial-relay-plugin",
     "type": "sylius-plugin",
     "description": "Sylius plugin for Mondial Relay (Sylius 2.x & Bootstrap 5 compatible).",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "keywords": [
         "sylius",
         "sylius-plugin",
