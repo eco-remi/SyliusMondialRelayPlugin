@@ -1,12 +1,14 @@
 sylius_twig_hooks:
     hooks:
+        # 1. Injection de la Modal Bootstrap 5 au niveau racine du checkout select_shipping
         'sylius_shop.checkout.select_shipping':
-            mondial_relay_stylesheets:
-                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_stylesheets.html.twig'
-                priority: 10
             mondial_relay_modal:
                 template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_modal.html.twig'
-                priority: 20
-            mondial_relay_javascripts:
-                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_javascripts.html.twig'
-                priority: 30
+                priority: -100
+
+        # 2. Injection du widget (bouton + card du relais + champ caché pickupPointId)
+        #    sous le libellé de la méthode de livraison
+        'sylius_shop.checkout.select_shipping.content.form.shipments.shipment.choice.details':
+            mondial_relay_choice:
+                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/SelectShipping/_choice_widget.html.twig'
+                priority: -200

@@ -1,27 +1,48 @@
-<div class="pickup-points-search">
-    <div class="pickup-points-search-form ui form">
-        <div class="pickup-points-input">
-            {{ form_start(form, {'attr': {'class': 'search-pickup-point-form'}}) }}
-            <div class="search-pickup-point-autocomplete">
-                {{ form_label(form.zipCode) }}
-                {{ form_widget(form.zipCode, {'attr': {'autocomplete': 'off', 'data-mr-autocomplete': 'true'}}) }}
-                {{ form_widget(form.suggestion) }}
-                <ul></ul>
+<div class="pickup-points-search container-fluid p-0">
+    {# Formulaire de recherche #}
+    <div class="pickup-points-search-form mb-3">
+        {{ form_start(form, {'attr': {'class': 'search-pickup-point-form'}}) }}
+        <div class="row g-2 align-items-center">
+            <div class="col-md-7 col-12">
+                <div class="input-group search-pickup-point-autocomplete position-relative">
+                    {{ form_widget(form.zipCode, {'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Code postal ou ville...',
+                        'autocomplete': 'off',
+                        'data-mr-autocomplete': 'true'
+                    }}) }}
+                    {{ form_widget(form.suggestion) }}
+                    <button type="button" class="btn btn-outline-secondary" data-mr-geolocalisation title="Me géolocaliser">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-crosshair" viewBox="0 0 16 16">
+                            <path d="M8.5.5a.5.5 0 0 0-1 0v.518A7 7 0 0 0 1.018 7.5H.5a.5.5 0 0 0 0 1h.518A7 7 0 0 0 7.5 14.982v.518a.5.5 0 0 0 1 0v-.518A7 7 0 0 0 14.982 8.5h.518a.5.5 0 0 0 0-1h-.518A7 7 0 0 0 8.5 1.018zm-4.75 7A5.25 5.25 0 0 1 8 2.75v1.5a3.75 3.75 0 0 0-3.75 3.75zm0 1.5A3.75 3.75 0 0 0 8 12.75v1.5a5.25 5.25 0 0 1-4.25-5.25zM12.25 8A3.75 3.75 0 0 0 8.5 4.25v-1.5a5.25 5.25 0 0 1 5.25 5.25zm0 1.5A5.25 5.25 0 0 1 8.5 14.75v-1.5a3.75 3.75 0 0 0 3.75-3.75z"/>
+                        </svg>
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'sylius.mondial_relay.search'|trans }}
+                    </button>
+                    <ul class="dropdown-menu w-100" style="display: none;"></ul>
+                </div>
             </div>
-            {{ form_row(form.types) }}
-            <div>
-                <button type="button" class="ui icon mini primary button" data-mr-geolocalisation>
-                    <i class="icon crosshairs"></i>
-                </button>
+            <div class="col-md-5 col-12 d-none">
+                {{ form_row(form.types) }}
             </div>
-            <button title="{{ 'sylius.mondial_relay.search'|trans }}" type="submit" class="ui primary button">{{ 'sylius.mondial_relay.search'|trans }}</button>
-            {{ form_end(form) }}
         </div>
+        {{ form_end(form) }}
     </div>
-    <div class="pickup-points-map" id="pickup-points-map"></div>
-    <div class="pickup-points-search-results">
-        <div class="pickup-points-no-results" style="display: none;">{{ 'sylius.mondial_relay.no_result_for_your_search'|trans }}</div>
-        <div class="pickup-points-results-list"></div>
-        <ul class="pickup-points-pagination"></ul>
+
+    {# Disposition Carte + Liste #}
+    <div class="row g-3">
+        <div class="col-lg-7 col-12 order-lg-1 order-2">
+            <div class="pickup-points-map rounded border" id="pickup-points-map" style="width: 100%; height: 450px; min-height: 400px;"></div>
+        </div>
+        <div class="col-lg-5 col-12 order-lg-2 order-1">
+            <div class="pickup-points-search-results d-flex flex-column" style="height: 450px;">
+                <div class="alert alert-info pickup-points-no-results" style="display: none;">
+                    {{ 'sylius.mondial_relay.no_result_for_your_search'|trans }}
+                </div>
+                <div class="pickup-points-results-list flex-grow-1 overflow-auto border rounded mb-2"></div>
+                <ul class="pickup-points-pagination pagination pagination-sm justify-content-center m-0"></ul>
+            </div>
+        </div>
     </div>
 </div>

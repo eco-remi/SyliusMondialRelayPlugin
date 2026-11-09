@@ -1,140 +1,137 @@
+import * as bootstrap from 'bootstrap';
 import AjaxRequest from './ajax-request';
 import Gmap from './gmap-adapter';
 import Osm from './osm-adapter';
 
-export default class MondialRelay
-{
-    constructor(options) {
-        options = options || {};
-        this.shippingMethodForm = document.querySelector('form[name="sylius_checkout_select_shipping"]');
-        this.modal = document.getElementById('modal-mondial-relay');
+export default class MondialRelay {
+    constructor(options = {}) {
+        // Détection du formulaire Sylius 2 (ou fallback Sylius 1)
+        this.shippingMethodForm = document.querySelector(
+            'form[name="sylius_shop_checkout_select_shipping"], form[name="sylius_checkout_select_shipping"]'
+        );
+        this.modalEl = document.getElementById('modal-mondial-relay');
+
+        if (!this.shippingMethodForm || !this.modalEl) {
+            return;
+        }
+
+        this.bsModal = bootstrap.Modal.getOrCreateInstance(this.modalEl);
         this.itemsPerPage = options.itemsPerPage || 6;
         this.currentPage = 1;
         this.resultsSet = [];
         this.currentPickupPoint = null;
-        this.mapProvider = this.modal.getAttribute('data-map-provider');
+        this.mapProvider = this.modalEl.getAttribute('data-map-provider');
         this.mapAdapter = null;
 
-        this.debounce = (function () {
-            return function (func, delay = 300) {
-                let timeout;
+        this.debounce = (func, delay = 300) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
 
-                return function (...args) {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(function () {
-                        func.apply(this, args);
-                    }, delay);
-                }
-            }
-        })();
-
-        this.addEventListeners();
-        this.fixCurrentPointPosition();
-
-        if (this.isMondialRelayMethodSelected()) {
-            this.showModal();
-        }
-
+        this.initEventListeners();
+        this.checkInitialState();
         this.loadCurrentPoint();
     }
 
-    addEventListeners() {
-        $(this.modal).modal({
-            onHidden: function () {
-                this.clearModalContent();
-            }.bind(this),
-            onApprove: function () {
-                this.setCheckoutPickupPoint();
-            }.bind(this)
+    initEventListeners() {
+        // Redimensionnement de la carte lorsque la modale Bootstrap s'affiche
+        this.modalEl.addEventListener('shown.bs.modal', () => {
+            if (this.mapAdapter) {
+                this.mapAdapter.resize();
+            }
         });
 
-        this.shippingMethodForm.addEventListener('change', function () {
-            if (this.isMondialRelayMethodSelected()) {
-                this.showModal();
-                document.getElementById('current-pickup-point').style.display = 'block';
-            } else {
-                document.getElementById('current-pickup-point').style.display = 'none';
-                this.shippingMethodForm.querySelector('input.smr-pickup-point-id').value = '';
-            }
-        }.bind(this));
+        // Nettoyage à la fermeture
+        this.modalEl.addEventListener('hidden.bs.modal', () => {
+            this.clearModalContent();
+        });
 
-        document.addEventListener('submit', function (event) {
-            // Submit search form
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('form.search-pickup-point-form'), event.target)) {
+        // Changement de méthode de livraison
+        this.shippingMethodForm.addEventListener('change', () => {
+            const currentPointWrapper = document.getElementById('current-pickup-point');
+            if (this.isMondialRelayMethodSelected()) {
+                if (currentPointWrapper) currentPointWrapper.style.display = 'block';
+                if (!this.currentPickupPoint) {
+                    this.showModal();
+                }
+            } else {
+                if (currentPointWrapper) currentPointWrapper.style.display = 'none';
+                const input = this.shippingMethodForm.querySelector('input.smr-pickup-point-id');
+                if (input) input.value = '';
+                this.currentPickupPoint = null;
+            }
+        });
+
+        // Bouton de validation dans la modal
+        const selectBtn = this.modalEl.querySelector('#mr-select-btn');
+        if (selectBtn) {
+            selectBtn.addEventListener('click', () => {
+                if (this.currentPickupPoint) {
+                    this.setCheckoutPickupPoint();
+                    this.bsModal.hide();
+                }
+            });
+        }
+
+        // Clics délégués (Ouvrir modal, pagination, géolocalisation, etc.)
+        document.addEventListener('click', (event) => {
+            // Ouvrir modal
+            if (event.target.closest('[data-load-pickup-point-list]')) {
+                event.preventDefault();
+                this.showModal();
+                return;
+            }
+
+            // Pagination
+            const pageBtn = event.target.closest('button[data-page]');
+            if (pageBtn && this.modalEl.contains(pageBtn)) {
+                this.showPage(parseInt(pageBtn.getAttribute('data-page'), 10));
+                return;
+            }
+
+            // Géolocalisation
+            if (event.target.closest('button[data-mr-geolocalisation]')) {
+                this.geolocation();
+                return;
+            }
+
+            // Sélection d'un point dans la liste
+            const relayItem = event.target.closest('.relay-point-list-item');
+            if (relayItem && this.modalEl.contains(relayItem)) {
+                this.selectPickupPoint(relayItem.getAttribute('data-relay-point-id'));
+                return;
+            }
+
+            // Autocomplete
+            const autoItem = event.target.closest('[data-autocomplete-item]');
+            if (autoItem && this.modalEl.contains(autoItem)) {
+                this.selectAutocompleteItem(autoItem);
+            }
+        });
+
+        // Soumission du formulaire de recherche dans la modal
+        document.addEventListener('submit', (event) => {
+            if (event.target.matches('form.search-pickup-point-form')) {
                 event.preventDefault();
                 event.stopPropagation();
                 this.search();
             }
-        }.bind(this));
+        });
 
-        document.addEventListener('click', function (event) {
-            // Click to close modal
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('.close-modal'), event.target)) {
-                $(this.modal).modal('hide');
-
-                return;
-            }
-
-            // Click to open modal
-            if (-1 !== [].indexOf.call(this.shippingMethodForm.querySelectorAll('[data-load-pickup-point-list]'), event.target)) {
-                this.showModal();
-
-                return;
-            }
-
-            // Change results list page
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('button[data-page]'), event.target)) {
-                this.showPage(parseInt(event.target.getAttribute('data-page')));
-
-                return;
-            }
-
-            // Geolocation
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('button[data-mr-geolocalisation]'), event.target)) {
-                this.geolocation();
-
-                return;
-            }
-
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('[data-autocomplete-item]'), event.target)) {
-                return this.selectAutocompleteItem(event.target);
-            }
-
-            // Select pickup point
-            let item = event.target;
-
-            while(item !== null) {
-                if (item.classList && item.classList.contains('relay-point-list-item')) {
-                    return this.selectPickupPoint(item.getAttribute('data-relay-point-id'));
-                }
-
-                item = item.parentNode;
-            }
-        }.bind(this));
-
-        document.addEventListener('keyup', function (event) {
+        // Autocomplete sur le code postal
+        document.addEventListener('keyup', (event) => {
             if (event.target.getAttribute('data-mr-autocomplete')) {
-                this.debounce(function () {
-                    this.autocomplete();
-                }.bind(this), 300)();
+                this.debounce(() => this.autocomplete(), 300)();
             }
-        }.bind(this));
+        });
     }
 
-    fixCurrentPointPosition() {
-        let currentPointWrapper = document.getElementById('current-pickup-point');
-
-        if (!currentPointWrapper) {
-            return;
-        }
-
-        let itemParent = currentPointWrapper.closest('.item');
-
-        if (itemParent) {
-            itemParent.parentNode.appendChild(currentPointWrapper);
-        }
-
-        if (this.isMondialRelayMethodSelected()) {
+    checkInitialState() {
+        const currentPointWrapper = document.getElementById('current-pickup-point');
+        if (currentPointWrapper && this.isMondialRelayMethodSelected()) {
             currentPointWrapper.style.display = 'block';
         }
     }
@@ -144,421 +141,242 @@ export default class MondialRelay
     }
 
     loadCurrentPoint() {
-        let input = this.shippingMethodForm.querySelector('input.smr-pickup-point-id');
-
-        if (input.value) {
+        const input = this.shippingMethodForm.querySelector('input.smr-pickup-point-id');
+        if (input && input.value) {
             this.currentPickupPoint = input.value;
             this.setCheckoutPickupPoint();
         }
     }
 
     setCheckoutPickupPoint() {
-        let input = this.shippingMethodForm.querySelector('input.smr-pickup-point-id'),
-            request = new AjaxRequest(this.modal.getAttribute('data-find-url'), 'GET', {pickupPointId: this.currentPickupPoint}),
-            currentPointWrapper = document.getElementById('current-pickup-point');
+        const input = this.shippingMethodForm.querySelector('input.smr-pickup-point-id');
+        const currentPointWrapper = document.getElementById('current-pickup-point');
+        if (input) input.value = this.currentPickupPoint;
 
-        input.value = this.currentPickupPoint;
+        const findUrl = this.modalEl.getAttribute('data-find-url');
+        const request = new AjaxRequest(findUrl, 'GET', { pickupPointId: this.currentPickupPoint });
 
-        request.send().then(function (response) {
-            currentPointWrapper.innerHTML = response;
-            currentPointWrapper.style.display = 'block';
-        }.bind(this));
+        request.send().then((response) => {
+            if (currentPointWrapper) {
+                currentPointWrapper.innerHTML = response;
+                currentPointWrapper.style.display = 'block';
+            }
+        });
     }
 
     showModal() {
-        let request = new AjaxRequest(this.modal.getAttribute('data-load-url'), 'GET');
+        const loadUrl = this.modalEl.getAttribute('data-load-url');
+        const request = new AjaxRequest(loadUrl, 'GET');
 
-        request.send().then(function (rawResponse) {
-            let response = JSON.parse(rawResponse);
-            this.modal.querySelector('.content').innerHTML = response.form || '';
+        request.send().then((rawResponse) => {
+            const response = JSON.parse(rawResponse);
+            const content = this.modalEl.querySelector('.content');
+            content.innerHTML = response.form || '';
 
-            if (!this.mapProvider) {
-                this.modal.querySelector('.pickup-points-map').style.display = 'none';
-                this.modal.querySelector('button[data-mr-geolocalisation]').style.display = 'none';
-            }
-
-            $(this.modal).modal('show');
-
+            this.createMapAdapter();
+            this.bsModal.show();
             this.onSearchResultsUpdated(response.points || []);
-        }.bind(this));
+        });
     }
 
     clearModalContent() {
-        this.modal.querySelector('.content').innerHTML = '';
-
-        if (null !== this.mapAdapter) {
-            this.mapAdapter = null;
-        }
-    }
-
-    getMapAdapter() {
-        if (null === this.mapAdapter) {
-            this.createMapAdapter();
-        }
-
-        return this.mapAdapter;
+        this.mapAdapter = null;
     }
 
     createMapAdapter() {
-        let params = {
-            el: this.modal.querySelector('.pickup-points-map'),
+        const mapContainer = this.modalEl.querySelector('#pickup-points-map');
+        if (!mapContainer) return;
+
+        const params = {
+            el: mapContainer,
             icons: {
-                markerDefault: this.modal.getAttribute('data-marker'),
-                markerSelected: this.modal.getAttribute('data-marker-selected'),
+                markerDefault: this.modalEl.getAttribute('data-marker'),
+                markerSelected: this.modalEl.getAttribute('data-marker-selected'),
             },
             translations: {
-                choose: this.modal.getAttribute('data-choose-label'),
+                choose: this.modalEl.getAttribute('data-choose-label'),
             },
-            onSelectMarker: this.selectPickupPoint.bind(this),
+            onSelectMarker: (id) => this.selectPickupPoint(id),
         };
 
-        if ('google' === this.mapProvider) {
-            this.mapAdapter = new Gmap(params);
-        } else if ('open_street_map' === this.mapProvider) {
+        if ('open_street_map' === this.mapProvider) {
             this.mapAdapter = new Osm(params);
+        } else if ('google' === this.mapProvider) {
+            this.mapAdapter = new Gmap(params);
         }
     }
 
-    changeLocation(location) {
-        let form = this.modal.querySelector('form.search-pickup-point-form'),
-            locationField = form.querySelector('input[name$="\[zipCode\]"]');
+    selectPickupPoint(id) {
+        this.currentPickupPoint = id;
 
-        locationField.value = location;
-        this.search();
-    }
-
-    geolocation() {
-        if ("undefined" === typeof(navigator.geolocation) || !this.getMapAdapter()) {
-            return;
-        }
-
-        let btn = this.modal.querySelector('button[data-mr-geolocalisation]');
-        btn.setAttribute('disabled', 'disabled');
-
-        navigator.geolocation.getCurrentPosition(
-            function (position) {
-                let positionNormalized = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-
-                this.getMapAdapter().setMapCenter(positionNormalized);
-                this.getMapAdapter().getZipCodeByPosition(positionNormalized).then(
-                    function (zipCode) {
-                        btn.removeAttribute('disabled');
-                        this.changeLocation(zipCode);
-                    }.bind(this),
-                    function () {
-                        btn.removeAttribute('disabled');
-                    }
-                )
-            }.bind(this),
-            function () {
-                btn.removeAttribute('disabled');
+        // Mise à jour visuelle des éléments de la liste
+        const items = this.modalEl.querySelectorAll('.relay-point-list-item');
+        items.forEach((item) => {
+            if (item.getAttribute('data-relay-point-id') === id) {
+                item.classList.add('active', 'border-primary');
+            } else {
+                item.classList.remove('active', 'border-primary');
             }
-        )
+        });
+
+        if (this.mapAdapter) {
+            this.mapAdapter.selectMarker(id);
+        }
+
+        // Activation du bouton Choisir
+        const selectBtn = this.modalEl.querySelector('#mr-select-btn');
+        if (selectBtn) {
+            selectBtn.removeAttribute('disabled');
+        }
     }
 
     search() {
-        let form = this.modal.querySelector('form.search-pickup-point-form');
+        const form = this.modalEl.querySelector('form.search-pickup-point-form');
+        if (!form) return;
 
-        let request = new AjaxRequest(
-                form.getAttribute('action'),
-                form.getAttribute('method').toUpperCase(),
-                new URLSearchParams(new FormData(form))
-            );
+        const request = new AjaxRequest(
+            form.getAttribute('action'),
+            form.getAttribute('method').toUpperCase(),
+            new URLSearchParams(new FormData(form))
+        );
 
-        request.send().then(function (response) {
+        request.send().then((response) => {
             this.onSearchResultsUpdated(JSON.parse(response));
-        }.bind(this));
-    }
-
-    hideResultList() {
-        let resultsListWrapper = this.modal.querySelector('.pickup-points-results-list'),
-            paginationList = this.modal.querySelector('.pickup-points-pagination');
-
-        resultsListWrapper.classList.add('no-pagination');
-        resultsListWrapper.innerHTML = '';
-        resultsListWrapper.style.display = 'none';
-        paginationList.innerHTML = '';
-        paginationList.style.display = 'none';
-    }
-
-    showResultList() {
-        let resultsListWrapper = this.modal.querySelector('.pickup-points-results-list'),
-            paginationList = this.modal.querySelector('.pickup-points-pagination');
-
-        resultsListWrapper.style.display = 'block';
-        paginationList.style.display = 'flex';
+        });
     }
 
     onSearchResultsUpdated(points) {
         this.resultsSet = points;
         this.currentPage = 1;
 
-        let resultsListWrapper = this.modal.querySelector('.pickup-points-results-list'),
-            paginationList = this.modal.querySelector('.pickup-points-pagination'),
-            pagesCount = Math.ceil(this.resultsSet.length / this.itemsPerPage);
+        const resultsList = this.modalEl.querySelector('.pickup-points-results-list');
+        const noResults = this.modalEl.querySelector('.pickup-points-no-results');
+        const pagination = this.modalEl.querySelector('.pickup-points-pagination');
 
-        paginationList.innerHTML = '';
-        resultsListWrapper.classList.remove('no-pagination');
-
-        if (0 === this.resultsSet.length) {
-            if (this.getMapAdapter()) {
-                this.getMapAdapter().clearMarkers();
-            }
-            this.hideResultList();
-            this.modal.querySelector('.pickup-points-no-results').style.display = 'block';
-
+        if (!points || points.length === 0) {
+            if (this.mapAdapter) this.mapAdapter.clearMarkers();
+            if (resultsList) resultsList.innerHTML = '';
+            if (noResults) noResults.style.display = 'block';
+            if (pagination) pagination.innerHTML = '';
             return;
         }
 
+        if (noResults) noResults.style.display = 'none';
         this.showSearchResults();
-        this.showResultList();
-        this.modal.querySelector('.pickup-points-no-results').style.display = 'none';
-
-        if (1 >= pagesCount) {
-            resultsListWrapper.classList.add('no-pagination');
-
-            return;
-        }
-
-        for (let i = 0; i < pagesCount; i++) {
-            let page = i + 1,
-                li = document.createElement('li'),
-                btn = document.createElement('button'),
-                pageLabel = document.createTextNode(page.toString());
-
-            btn.setAttribute('type', 'button');
-            btn.setAttribute('data-page', page.toString());
-            btn.appendChild(pageLabel);
-
-            if (this.currentPage === page) {
-                li.classList.add('current');
-            }
-
-            li.appendChild(btn);
-            paginationList.appendChild(li);
-        }
-    }
-
-    getDisplayResultsSet() {
-        let offset = (this.currentPage - 1) * this.itemsPerPage;
-
-        return this.resultsSet.slice(offset, offset + this.itemsPerPage);
+        this.renderPagination();
     }
 
     showSearchResults() {
-        let resultsListWrapper = this.modal.querySelector('.pickup-points-results-list'),
-            resultsList = document.createElement('ul');
+        const resultsList = this.modalEl.querySelector('.pickup-points-results-list');
+        if (!resultsList) return;
 
-        resultsListWrapper.innerHTML = '';
+        resultsList.innerHTML = '';
+        const offset = (this.currentPage - 1) * this.itemsPerPage;
+        const pagePoints = this.resultsSet.slice(offset, offset + this.itemsPerPage);
 
-        this.getDisplayResultsSet().map(function (point) {
-            resultsList.append(this.createPointCard(point));
-        }.bind(this));
+        const listGroup = document.createElement('div');
+        listGroup.className = 'list-group list-group-flush';
 
-        resultsListWrapper.append(resultsList);
-        if (this.getMapAdapter()) {
-            this.getMapAdapter().updateMarkers(this.getDisplayResultsSet());
+        pagePoints.forEach((point) => {
+            const item = document.createElement('a');
+            item.href = '#';
+            item.className = 'list-group-item list-group-item-action relay-point-list-item py-2';
+            item.setAttribute('data-relay-point-id', point.id);
+
+            item.innerHTML = `
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <strong class="mb-1 text-primary">${point.label}</strong>
+                    <small class="badge bg-light text-dark">${point.distance ? point.distance + ' m' : ''}</small>
+                </div>
+                <p class="mb-1 text-muted small">${point.address}, ${point.zipCode || ''} ${point.city || ''}</p>
+            `;
+
+            listGroup.appendChild(item);
+        });
+
+        resultsList.appendChild(listGroup);
+
+        if (this.mapAdapter) {
+            this.mapAdapter.updateMarkers(pagePoints);
+        }
+    }
+
+    renderPagination() {
+        const pagination = this.modalEl.querySelector('.pickup-points-pagination');
+        if (!pagination) return;
+        pagination.innerHTML = '';
+
+        const pagesCount = Math.ceil(this.resultsSet.length / this.itemsPerPage);
+        if (pagesCount <= 1) return;
+
+        for (let i = 1; i <= pagesCount; i++) {
+            const li = document.createElement('li');
+            li.className = `page-item ${i === this.currentPage ? 'active' : ''}`;
+            li.innerHTML = `<button type="button" class="page-link" data-page="${i}">${i}</button>`;
+            pagination.appendChild(li);
         }
     }
 
     showPage(page) {
-        let paginationList = this.modal.querySelector('.pickup-points-pagination');
-
         this.currentPage = page;
         this.showSearchResults();
-
-        paginationList.querySelector('li.current').classList.remove('current');
-        paginationList.querySelector('button[data-page="' + page + '"]').parentNode.classList.add('current');
+        this.renderPagination();
     }
 
-    createPointCard(point) {
-        let li = document.createElement('li'),
-            card = document.createElement('div'),
-            name = document.createElement('p'),
-            address = document.createElement('p'),
-            addressComplement = document.createElement('p'),
-            businessHours = document.createElement('div'),
-            table = document.createElement('table'),
-            complement = [],
-            liClasses = ['relay-point-list-item'];
+    geolocation() {
+        if (!navigator.geolocation || !this.mapAdapter) return;
+        const btn = this.modalEl.querySelector('button[data-mr-geolocalisation]');
+        if (btn) btn.disabled = true;
 
-        name.setAttribute('class', 'pickup-point-name');
-        name.textContent = point.label;
-
-        address.setAttribute('class', 'pickup-point-address');
-        address.textContent = point.address;
-
-        if (point.zipCode) {
-            complement.push(point.zipCode);
-        }
-
-        if (point.city) {
-            complement.push(point.city);
-        }
-
-        if (complement.length > 0) {
-            addressComplement.setAttribute('class', 'pickup-point-address');
-            addressComplement.textContent = complement.join(' ');
-        }
-
-        if (!this.pointIsOpen(point.businessHours)) {
-            liClasses.push('close');
-        }
-
-        point.businessHours.forEach((item) => {
-            this.generateBusinessHoursTable(table, item);
-        });
-
-        businessHours.appendChild(table);
-        businessHours.classList.add('point-business-hours');
-
-        card.setAttribute('class', 'pickup-point-card');
-        card.appendChild(name);
-        card.appendChild(address);
-        if (complement.length > 0) {
-            card.appendChild(addressComplement);
-        }
-        card.appendChild(businessHours);
-
-        li.setAttribute('class', liClasses.join(' '));
-        li.setAttribute('data-relay-point-id', point.id);
-        li.appendChild(card);
-
-        return li;
-    }
-
-    generateBusinessHoursTable(table, data) {
-        let row = table.insertRow();
-        let cell = row.insertCell();
-        let text = document.createTextNode(data.label);
-
-        cell.appendChild(text);
-
-        if ("undefined" === typeof(data.slots) || 0 >= data.slots.length) {
-            cell = row.insertCell();
-            cell.appendChild(document.createTextNode(' - '));
-            cell.colSpan = 2;
-
-            return;
-        }
-
-        if ("undefined" === typeof(data.slots[1])) {
-            let isAfternoonSlot = parseInt(data.slots[0].from.substring(0, 2)) >= 12;
-
-            if (isAfternoonSlot) {
-                cell = row.insertCell();
-                cell.appendChild(document.createTextNode(' - '));
-            }
-
-            cell = row.insertCell();
-            cell.appendChild(document.createTextNode(data.slots[0].from + ' - ' + data.slots[0].to));
-
-            if (!isAfternoonSlot) {
-                cell = row.insertCell();
-                cell.appendChild(document.createTextNode(' - '));
-            }
-
-            return;
-        }
-
-        cell = row.insertCell();
-        cell.appendChild(document.createTextNode(data.slots[0].from + ' - ' + data.slots[0].to));
-        cell = row.insertCell();
-        cell.appendChild(document.createTextNode(data.slots[1].from + ' - ' + data.slots[1].to));
-    }
-
-    pointIsOpen(businessHours) {
-        let now = new Date();
-
-        for (let i = 0; i < businessHours.length; i++) {
-            if (now.getDay() !== businessHours[i].day) {
-                continue;
-            }
-
-            for (let j = 0; j < businessHours[i].slots.length; j++) {
-                let start = new Date(),
-                    end = new Date(),
-                    from = businessHours[i].slots[j].from,
-                    to = businessHours[i].slots[j].to;
-
-                start.setHours(parseInt(from.substring(0, 2)), parseInt(from.substring(from.length - 2, from.length)));
-                end.setHours(parseInt(to.substring(0, 2)), parseInt(to.substring(to.length - 2, to.length)));
-
-                if (now.getTime() > start.getTime() && now.getTime() < end.getTime()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    selectPickupPoint(id) {
-        let resultsListWrapper = this.modal.querySelector('.pickup-points-results-list'),
-            highlighted = resultsListWrapper.querySelector('li.highlight'),
-            item = resultsListWrapper.querySelector('li[data-relay-point-id="' + id + '"]');
-
-        if (highlighted && highlighted.getAttribute('data-relay-point-id') !== id) {
-            highlighted.classList.remove('highlight');
-        }
-
-        if (item.classList.contains('highlight')) {
-            item.classList.remove('highlight');
-        } else {
-            item.classList.add('highlight');
-        }
-
-        if (this.getMapAdapter()) {
-            this.getMapAdapter().selectMarker(id);
-        }
-        this.currentPickupPoint = id;
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                this.mapAdapter.setMapCenter(pos);
+                this.mapAdapter.getZipCodeByPosition(pos).then((zipCode) => {
+                    if (btn) btn.disabled = false;
+                    const zipInput = this.modalEl.querySelector('input[data-mr-autocomplete]');
+                    if (zipInput) {
+                        zipInput.value = zipCode;
+                        this.search();
+                    }
+                }).catch(() => { if (btn) btn.disabled = false; });
+            },
+            () => { if (btn) btn.disabled = false; }
+        );
     }
 
     autocomplete() {
-        let autocompleteWrapper = this.modal.querySelector('.search-pickup-point-autocomplete'),
-            queryInput = autocompleteWrapper.querySelector('input[type="text"]'),
-            suggestionInput = autocompleteWrapper.querySelector('input[type="hidden"]'),
-            resultsList = autocompleteWrapper.querySelector('ul'),
-            request = new AjaxRequest(this.modal.getAttribute('data-autocomplete-url'), 'GET', {
-                query: queryInput.value,
-            });
+        const input = this.modalEl.querySelector('input[data-mr-autocomplete]');
+        const dropdown = this.modalEl.querySelector('.search-pickup-point-autocomplete .dropdown-menu');
+        const autoUrl = this.modalEl.getAttribute('data-autocomplete-url');
+        if (!input || !dropdown || !autoUrl || input.value.length < 2) return;
 
-        resultsList.style.display = 'none';
-        suggestionInput.value = '';
-
-        request.send().then(function (response) {
-            let places = JSON.parse(response);
-
-            resultsList.innerHTML = '';
-
-            for (let i = 0; i < places.length; i++) {
-                let li = document.createElement('li')
-                li.setAttribute('data-autocomplete-item', places[i].id);
-                li.appendChild(document.createTextNode(places[i].label));
-                resultsList.appendChild(li);
+        new AjaxRequest(autoUrl, 'GET', { query: input.value }).send().then((raw) => {
+            const places = JSON.parse(raw);
+            dropdown.innerHTML = '';
+            if (places.length === 0) {
+                dropdown.style.display = 'none';
+                return;
             }
 
-            resultsList.style.display = 'block';
+            places.forEach((place) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a class="dropdown-item" href="#" data-autocomplete-item="${place.id}">${place.label}</a>`;
+                dropdown.appendChild(li);
+            });
+            dropdown.style.display = 'block';
         });
     }
 
     selectAutocompleteItem(item) {
-        let autocompleteWrapper = this.modal.querySelector('.search-pickup-point-autocomplete'),
-            resultsList = autocompleteWrapper.querySelector('ul'),
-            queryInput = autocompleteWrapper.querySelector('input[type="text"]'),
-            suggestionInput = autocompleteWrapper.querySelector('input[type="hidden"]'),
-            query = item.innerText.trim();
+        const input = this.modalEl.querySelector('input[data-mr-autocomplete]');
+        const suggestionInput = this.modalEl.querySelector('input[name$="[suggestion]"]');
+        const dropdown = this.modalEl.querySelector('.search-pickup-point-autocomplete .dropdown-menu');
 
-        queryInput.value = query;
-        suggestionInput.value = item.getAttribute('data-autocomplete-item');
-        resultsList.style.display = 'none';
-        resultsList.innerHTML = '';
+        if (input) input.value = item.textContent.trim();
+        if (suggestionInput) suggestionInput.value = item.getAttribute('data-autocomplete-item');
+        if (dropdown) dropdown.style.display = 'none';
 
-        if (query) {
-            this.search();
-        }
+        this.search();
     }
 }

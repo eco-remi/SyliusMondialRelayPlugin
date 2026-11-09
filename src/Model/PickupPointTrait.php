@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace EResponsable\SyliusMondialRelayPlugin\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +16,7 @@ trait PickupPointTrait
      *
      * @ORM\Column(name="pickup_point_id", type="string", nullable=true)
      */
-    private $pickupPointId;
+    private ?string $pickupPointId = null;
 
     /**
      * @return string|null

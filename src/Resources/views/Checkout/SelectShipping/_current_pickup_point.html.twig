@@ -1,6 +1,22 @@
 {% if pickupPoint is not null %}
-    {% include '@EResponsableSyliusMondialRelayPlugin/Checkout/SelectShipping/_pickup_point_card.html.twig' %}
-    <button data-load-pickup-point-list type="button">{{ 'sylius.mondial_relay.change_relay_point'|trans }}</button>
+    <div class="card border-primary bg-light mb-2">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <strong class="d-block text-primary">{{ pickupPoint.name }}</strong>
+                    <small class="text-muted">{{ pickupPoint.shortAddress }}, {{ pickupPoint.zipCode }} {{ pickupPoint.city }}</small>
+                </div>
+                <button data-load-pickup-point-list type="button" class="btn btn-link btn-sm text-decoration-none">
+                    {{ 'sylius.mondial_relay.change_relay_point'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
 {% else %}
-    <button data-load-pickup-point-list type="button">{{ 'sylius.mondial_relay.select_a_relay_point'|trans }}</button>
+    <button data-load-pickup-point-list type="button" class="btn btn-outline-primary btn-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-1" viewBox="0 0 16 16">
+            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+        </svg>
+        {{ 'sylius.mondial_relay.select_a_relay_point'|trans }}
+    </button>
 {% endif %}

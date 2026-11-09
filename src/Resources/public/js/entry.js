@@ -1,12 +1,6 @@
-import '../css/style.css';
+import MondialRelay from './shop';
 
-import '../images/marker.svg';
-import '../images/marker-selected.svg';
-
-import MondialRelay from './shop.js';
-
-window.addEventListener('load', function () {
-  'use strict';
-
+// Initialisation dès que le DOM est prêt (compatible Turbolinks / Stimulus)
+document.addEventListener('DOMContentLoaded', () => {
   new MondialRelay();
 });

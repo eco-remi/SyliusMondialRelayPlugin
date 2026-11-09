@@ -1,22 +1,37 @@
 {% set mapProvider = get_map_provider() %}
 <div
+        class="modal fade"
         id="modal-mondial-relay"
-        class="ui modal{% if mapProvider is null %} no-map{% endif %}"
+        tabindex="-1"
+        aria-labelledby="modalMondialRelayLabel"
+        aria-hidden="true"
         data-load-url="{{ path('eResponsable_sylius_mondial_relay_select_shipping') }}"
         data-autocomplete-url="{{ path('eResponsable_sylius_mondial_relay_autocomplete') }}"
         data-find-url="{{ path('eResponsable_sylius_mondial_relay_get_pickup_point') }}"
         data-choose-label="{{ 'sylius.mondial_relay.choose_relay_point'|trans }}"
-        data-marker="{{ asset('build/shop/images/marker.svg', 'shop') }}"
-        data-marker-selected="{{ asset('build/shop/images/marker-selected.svg', 'shop') }}"
+        data-marker="{{ asset('bundles/eresponsablesyliusmondialrelayplugin/images/marker.svg') }}"
+        data-marker-selected="{{ asset('bundles/eresponsablesyliusmondialrelayplugin/images/marker-selected.svg') }}"
         data-map-provider="{{ mapProvider }}"
 >
-    <div class="header">
-        {{ 'sylius.mondial_relay.modal.title'|trans }}
-        <span class="close-modal"></span>
-    </div>
-    <div class="content"></div>
-    <div class="actions">
-        <div class="ui button deny">{{ 'sylius.mondial_relay.modal.close'|trans }}</div>
-        <div class="ui button approve primary" id="mr-select-btn">{{ 'sylius.mondial_relay.modal.choose'|trans }}</div>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="modalMondialRelayLabel">
+                    {{ 'sylius.mondial_relay.modal.title'|trans }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 content" style="min-height: 500px;">
+                {# Le contenu dynamique de recherche + carte est injecté ici #}
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-secondary deny" data-bs-dismiss="modal">
+                    {{ 'sylius.mondial_relay.modal.close'|trans }}
+                </button>
+                <button type="button" class="btn btn-primary approve" id="mr-select-btn" disabled>
+                    {{ 'sylius.mondial_relay.modal.choose'|trans }}
+                </button>
+            </div>
+        </div>
     </div>
 </div>

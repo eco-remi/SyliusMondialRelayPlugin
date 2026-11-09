@@ -1,17 +1,27 @@
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import AjaxRequest from './ajax-request';
 
-export default class OsmAdapter
-{
+export default class OsmAdapter {
     constructor(options) {
         this.el = options.el;
-        this.map = L.map(this.el.getAttribute('id')).setView([51.505, -0.09], 13);
         this.markers = [];
         this.icons = {
-            markerSelected: L.icon({iconUrl: options.icons.markerSelected}),
-            markerDefault: L.icon({iconUrl: options.icons.markerDefault}),
+            markerSelected: L.icon({
+                iconUrl: options.icons.markerSelected,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+            }),
+            markerDefault: L.icon({
+                iconUrl: options.icons.markerDefault,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+            }),
         };
         this.translations = {
-            choose: options.translations.choose
+            choose: options.translations.choose,
         };
         this.onSelectMarker = options.onSelectMarker || function() {};
 
@@ -19,92 +29,92 @@ export default class OsmAdapter
     }
 
     createMap() {
+        this.map = L.map(this.el, {
+            center: [46.603354, 1.888334], // Centre de la France
+            zoom: 6,
+        });
+
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
         }).addTo(this.map);
 
         this.resize();
     }
 
     resize() {
-        if (!this.map) {
-            return;
-        }
-
-        setTimeout(function () {
-            this.map.invalidateSize();
-        }.bind(this), 0);
-
-        setTimeout(function () {
-            this.map.invalidateSize();
-        }.bind(this), 200);
+        if (!this.map) return;
+        setTimeout(() => this.map.invalidateSize(), 50);
+        setTimeout(() => this.map.invalidateSize(), 300);
     }
 
     updateMarkers(markers) {
         this.clearMarkers();
+        if (!markers || markers.length === 0) return;
 
-        let points = [];
+        const points = [];
 
-        for (let i = 0; i < markers.length; i++) {
-            points.push(L.latLng(parseFloat(markers[i].lat), parseFloat(markers[i].lng)));
-            let marker = L.marker(
-                [parseFloat(markers[i].lat), parseFloat(markers[i].lng)],
-                {
-                    title: markers[i].label,
-                    icon: markers[i].selected ? this.icons.markerSelected : this.icons.markerDefault,
-                    id: markers[i].id,
-                }
-            ).addTo(this.map).on('click', function () {
-                this.onSelectMarker(marker.options.id);
-            }.bind(this));
+        markers.forEach((markerData) => {
+            const lat = parseFloat(markerData.lat);
+            const lng = parseFloat(markerData.lng);
+            if (isNaN(lat) || isNaN(lng)) return;
 
-            this.markers.push(marker);
-        }
+            const latLng = L.latLng(lat, lng);
+            points.push(latLng);
 
-        if (this.markers.length > 0) {
-            this.map.fitBounds(L.latLngBounds(points));
+            const marker = L.marker(latLng, {
+                title: markerData.label,
+                icon: markerData.selected ? this.icons.markerSelected : this.icons.markerDefault,
+            }).addTo(this.map);
+
+            marker.on('click', () => {
+                this.onSelectMarker(markerData.id);
+            });
+
+            this.markers.push({ id: markerData.id, marker });
+        });
+
+        if (points.length > 0) {
+            this.map.fitBounds(L.latLngBounds(points), { padding: [30, 30] });
         }
     }
 
     clearMarkers() {
-        for (let i = 0; i < this.markers.length; i++) {
-            this.markers[i].removeFrom(this.map);
-        }
-
+        this.markers.forEach(item => item.marker.removeFrom(this.map));
         this.markers = [];
     }
 
     selectMarker(id) {
-        for (let i = 0; i < this.markers.length; i++) {
-            if (id === this.markers[i].options.id) {
-                this.markers[i].setIcon(this.icons.markerSelected);
+        this.markers.forEach((item) => {
+            if (item.id === id) {
+                item.marker.setIcon(this.icons.markerSelected);
             } else {
-                this.markers[i].setIcon(this.icons.markerDefault);
+                item.marker.setIcon(this.icons.markerDefault);
             }
-        }
+        });
     }
 
     setMapCenter(position) {
-        this.map.setView(L.latLng(parseFloat(position.lat), parseFloat(position.lng)));
+        if (this.map) {
+            this.map.setView(L.latLng(parseFloat(position.lat), parseFloat(position.lng)), 14);
+        }
     }
 
     getZipCodeByPosition(position) {
-        return new Promise(function (resolve, reject) {
-            let request = new AjaxRequest('https://nominatim.openstreetmap.org/reverse', 'GET', {
+        return new Promise((resolve, reject) => {
+            const request = new AjaxRequest('https://nominatim.openstreetmap.org/reverse', 'GET', {
                 format: 'jsonv2',
                 lat: position.lat,
-                lon: position.lng
+                lon: position.lng,
             });
-            request.send().then(function (rawResponse) {
-                let response = JSON.parse(rawResponse);
-
-                if ("undefined" !== response.address.postcode) {
-                    return resolve(response.address.postcode);
+            request.send().then((rawResponse) => {
+                const response = JSON.parse(rawResponse);
+                if (response && response.address && response.address.postcode) {
+                    resolve(response.address.postcode);
+                } else {
+                    reject();
                 }
-
-                return reject();
-            }, reject);
+            }).catch(reject);
         });
     }
 }

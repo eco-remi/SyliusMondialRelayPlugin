@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace EResponsable\SyliusMondialRelayPlugin\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -7,6 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class EResponsableSyliusMondialRelayExtension
@@ -33,10 +36,10 @@ class EResponsableSyliusMondialRelayExtension extends Extension implements Prepe
         $container->setParameter('eResponsable_sylius_mondial_relay.base_url', $config['mondial_relay_base_url'] ?? '');
         $container->setParameter(
             'eResponsable_sylius_mondial_relay.enable_ticket_printing',
-                $config['enable_ticket_printing'] ?? ''
+            $config['enable_ticket_printing'] ?? false
         );
-        $container->setParameter('eResponsable_sylius_mondial_relay.map_provider', $config['map_provider']);
-        $container->setParameter('eResponsable_sylius_mondial_relay.google_api_key', $config['google_api_key']);
+        $container->setParameter('eResponsable_sylius_mondial_relay.map_provider', $config['map_provider'] ?? 'open_street_map');
+        $container->setParameter('eResponsable_sylius_mondial_relay.google_api_key', $config['google_api_key'] ?? null);
     }
 
     /**
@@ -44,8 +47,14 @@ class EResponsableSyliusMondialRelayExtension extends Extension implements Prepe
      */
     public function prepend(ContainerBuilder $container): void
     {
-        if ($container->hasExtension('twig')) {
-            $container->prependExtensionConfig('twig', ['form_themes' => ['@EResponsableSyliusMondialRelayPlugin/form_theme.html.twig']]);
+        if ($container->hasExtension('sylius_twig_hooks')) {
+            $hooksFile = __DIR__ . '/../Resources/config/app/twig_hooks/checkout/select_shipping.yaml';
+            if (file_exists($hooksFile)) {
+                $hooksConfig = Yaml::parseFile($hooksFile);
+                if (isset($hooksConfig['sylius_twig_hooks'])) {
+                    $container->prependExtensionConfig('sylius_twig_hooks', $hooksConfig['sylius_twig_hooks']);
+                }
+            }
         }
     }
 }
