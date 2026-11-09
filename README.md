@@ -40,12 +40,12 @@ composer require eresponsable/sylius-mondial-relay-plugin
 Complete the configuration:
 
 ```yaml
-# config/packages/eresponsable_sylius_mondial_relay.yaml
+# config/packages/e_responsable_sylius_mondial_relay.yaml
 
 e_responsable_sylius_mondial_relay:
-    wsdl: https://api.mondialrelay.com/Web_Services.asmx
-    merchant_id: "%env(MONDIAL_RELAIS_MERDANT_ID)%"
-    private_key: "%env(MONDIAL_RELAIS_PRIVATE_KEY)%"
+    wsdl: 'https://api.mondialrelay.com/Web_Services.asmx'
+    merchant_id: '%env(MONDIAL_RELAY_MERCHANT_ID)%'
+    private_key: '%env(MONDIAL_RELAY_PRIVATE_KEY)%'
 ```
 
 Import routing:
@@ -54,8 +54,10 @@ Import routing:
 # config/routes.yaml
 
 e_responsable_sylius_mondial_relay_plugin:
-    resource: "@EResponsableSyliusMondialRelayPlugin/Resources/config/routing.xml"
+    resource: '@EResponsableSyliusMondialRelayPlugin/Resources/config/routing.xml'
 ```
+
+If you are using Sylius 2.2+, the plugin registers the checkout Twig hook automatically. No extra app-side Twig hook configuration is required.
 
 In your Shipment entity, import the `PickupPointTrait`:
 
