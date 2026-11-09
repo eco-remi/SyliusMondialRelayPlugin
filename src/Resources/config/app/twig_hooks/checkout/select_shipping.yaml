@@ -1,0 +1,12 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.checkout.select_shipping':
+            mondial_relay_stylesheets:
+                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_stylesheets.html.twig'
+                priority: 10
+            mondial_relay_modal:
+                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_modal.html.twig'
+                priority: 20
+            mondial_relay_javascripts:
+                template: '@EResponsableSyliusMondialRelayPlugin/Checkout/_javascripts.html.twig'
+                priority: 30
