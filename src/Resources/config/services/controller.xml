@@ -22,6 +22,7 @@
             <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.bridge" />
             <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.place_finder.registry" />
             <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.serializer.point" />
+            <argument type="service" id="logger" />
             <argument>%eResponsable_sylius_mondial_relay.map_provider%</argument>
             <tag name="controller.service_arguments" />
         </service>

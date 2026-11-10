@@ -7,6 +7,7 @@
         </service>
         <service id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.client" class="EResponsable\SyliusMondialRelayPlugin\MondialRelay\Api\Client">
             <argument type="service" id="eResponsable.sylius_mondial_relay_plugin.mondial_relay.factory.ticket" />
+            <argument type="service" id="logger" />
             <argument>%eResponsable_sylius_mondial_relay.wsdl%</argument>
             <argument>%eResponsable_sylius_mondial_relay.merchant_id%</argument>
             <argument>%eResponsable_sylius_mondial_relay.private_key%</argument>

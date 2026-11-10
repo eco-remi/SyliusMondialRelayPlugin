@@ -14,11 +14,16 @@ use Psr\Log\LoggerInterface;
  */
 class Client
 {
+    /**
+     * @var \SoapClient
+     */
+    private ?\SoapClient $soap = null;
 
     /**
      * Client constructor.
      *
      * @param TicketFactory $ticketFactory
+     * @param LoggerInterface $logger
      * @param string        $wsdl
      * @param string        $merchantId
      * @param string        $privateKey
